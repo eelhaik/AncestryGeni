@@ -50,6 +50,20 @@ These folders need to be created manually as they are used by various scripts in
 ./Run_AncestryGeni.txt
 ```
 
+## 5. Calculating continental populations
+Update the variables in config_CP.json as follows:
+INPUT_TRAINING_FOLDER - The input folder
+INPUT_TESTING_FOLDER - The output folder
+INPUT_TRAINING_FILE - The output file of the former step, which will be used for training
+INPUT_TESTING_FILE - The output file of the former step, which will be used for testing
+
+Next, run in python:
+python PredictContinentalPopulations.py 
+
+The Output.txt file will have the continental codes.
+
+
+
 ### Output
 - The pipeline will run four scripts and clean up temporary files.
 - All output folders will be populated.
@@ -59,3 +73,4 @@ These folders need to be created manually as they are used by various scripts in
 
 - **For GRC37 Files**: The pipeline will perform a liftover to GRC38.
 - **For GRC38 Files**: No liftover is required.
+
