@@ -1,0 +1,61 @@
+# Ancestry Pipeline README
+
+This pipeline is designed for human genome builds GRC37 and GRC38.
+
+## 1. Setting Up the Parameters File
+
+### File: `Parameters.txt`
+- **Do Not Rename**: The pipeline scripts are hardcoded to read from `Parameters.txt`.
+
+### Parameters Overview
+
+- **ADMIXTURE_DIR**: Directory where the ADMIXTURE tool is installed.
+- **INPUT_DIR**: Directory containing raw VCF files of the samples.
+
+### Output Folders
+These folders need to be created manually as they are used by various scripts in the pipeline:
+- **OUTPUT_DIR**: Main output directory.
+- **OUTPUT_DIR_1KG**: Output directory for 1KG data.
+- **OUTPUT_DIR_FINAL**: Final output directory.
+- **OUTPUT_ADMIXTURE_DIR**: Directory where you will run the pipeline.
+
+### Output Files
+- **OUTPUT_FILE_TABLE**: Main output file containing ancestry counts.
+- **OUTPUT_FILE**: File listing the number of SNPs analyzed per sample (useful for quality control).
+
+### Reference Population Files (GRC38 Folder)
+- **REF_CHR_POS**: `ReferencePops/GRC38/Admixture_reference_pops.chr_pos`
+- **ADMIXTURE_REFERENCE_POPS**: `ReferencePops/GRC38/Admixture_reference_pops`
+- **REF_SNPS**: `ReferencePops/GRC38/SNPs.txt`
+- **BIM_NO_RS**: `ReferencePops/GRC38/Admixture_reference_pops_no_rs.bim`
+
+### Additional Parameters
+- **DB_NAME**: Name of the dataset being analyzed; used in `OUTPUT_FILE_TABLE` to differentiate results.
+- **NUM_OF_LINES**: Number of lines per sample in the files (e.g., 1 for `Germline_GATK_HaplotypeCaller`, 2 for `Somatic_Verdict`).
+
+## 2. Installing ADMIXTURE
+
+### Installation Instructions
+- Install ADMIXTURE from the provided zip file located in the `Admixture` folder.
+
+## 3. Setting Up the `OUTPUT_ADMIXTURE_DIR`
+
+- Use this directory to execute all pipeline commands.
+- This directory should contain pipeline files, associated files, and the liftover tool.
+
+## 4. Running the Pipeline
+
+### Command
+```bash
+./Run_AncestryGeni.txt
+```
+
+### Output
+- The pipeline will run four scripts and clean up temporary files.
+- All output folders will be populated.
+- Two output files will be generated (e.g., `RNASeq.txt`, `RNASeq_counts.txt`).
+
+## 5. Handling Different Human Builds
+
+- **For GRC37 Files**: The pipeline will perform a liftover to GRC38.
+- **For GRC38 Files**: No liftover is required.
