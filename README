@@ -46,9 +46,9 @@ These folders need to be created manually as they are used by various scripts in
 ## 4. Running the Pipeline
 
 ### Command
-```bash
+Download: http://www.eranelhaiklab.org/Files/AncestryGeni/ReferencePops.zip
+and unzip it
 ./Run_AncestryGeni.txt
-```
 
 ## 5. Calculating continental populations
 Update the variables in config_CP.json as follows:
@@ -62,6 +62,9 @@ python PredictContinentalPopulations.py
 
 The Output.txt file will have the continental codes.
 
+## 6. Example files
+Example files are shown in the Example folder.
+Note, all the genetic data was deleted for privacy reasons.
 
 
 ### Output
