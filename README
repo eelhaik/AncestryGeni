@@ -50,6 +50,11 @@ Download: http://www.eranelhaiklab.org/Files/AncestryGeni/ReferencePops.zip
 and unzip it
 ./Run_AncestryGeni.txt
 
+### Output
+- The pipeline will run four scripts and clean up temporary files.
+- All output folders will be populated.
+- Two output files will be generated (e.g., `RNASeq.txt`, `RNASeq_counts.txt`).
+
 ## 5. Calculating continental populations
 Update the variables in config_CP.json as follows:
 INPUT_TRAINING_FOLDER - The input folder
@@ -60,19 +65,14 @@ INPUT_TESTING_FILE - The output file of the former step, which will be used for 
 Next, run in python:
 python PredictContinentalPopulations.py 
 
+### Output
 The Output.txt file will have the continental codes.
 
 ## 6. Example files
 Example files are shown in the Example folder.
 Note, all the genetic data was deleted for privacy reasons.
 
-
-### Output
-- The pipeline will run four scripts and clean up temporary files.
-- All output folders will be populated.
-- Two output files will be generated (e.g., `RNASeq.txt`, `RNASeq_counts.txt`).
-
-## 5. Handling Different Human Builds
+## 7. Handling Different Human Builds
 
 - **For GRC37 Files**: The pipeline will perform a liftover to GRC38.
 - **For GRC38 Files**: No liftover is required.
