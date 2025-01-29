@@ -57,10 +57,15 @@ and unzip it
 
 ## 5. Calculating continental populations
 Update the variables in config_CP.json as follows:
+
 INPUT_TRAINING_FOLDER - The input folder
+
 INPUT_TESTING_FOLDER - The output folder
+
 INPUT_TRAINING_FILE - The output file of the former step, which will be used for training
+
 INPUT_TESTING_FILE - The output file of the former step, which will be used for testing
+
 Next, run in Python:
 
 PredictGeoGroup_ML_model
