@@ -46,26 +46,21 @@ These folders need to be created manually as they are used by various scripts in
 ## 4. Running the Pipeline
 
 ### Command
-Download: [ReferencePops.zip](http://www.eranelhaiklab.org/Files/AncestryGeni/ReferencePops.zip) and unzip it.
-
-Run the pipeline:
-```bash
+Download: http://www.eranelhaiklab.org/Files/AncestryGeni/ReferencePops.zip
+and unzip it
 ./Run_AncestryGeni.txt
-```
 
 ### Output
 - The pipeline will run four scripts and clean up temporary files.
 - All output folders will be populated.
 - Two output files will be generated (e.g., `RNASeq.txt`, `RNASeq_counts.txt`).
 
-## 5. Calculating Continental Populations
-
-Update the variables in `config_CP.json` as follows:
-- **INPUT_TRAINING_FOLDER**: The input folder.
-- **INPUT_TESTING_FOLDER**: The output folder.
-- **INPUT_TRAINING_FILE**: The output file of the former step, which will be used for training.
-- **INPUT_TESTING_FILE**: The output file of the former step, which will be used for testing.
-
+## 5. Calculating continental populations
+Update the variables in config_CP.json as follows:
+INPUT_TRAINING_FOLDER - The input folder
+INPUT_TESTING_FOLDER - The output folder
+INPUT_TRAINING_FILE - The output file of the former step, which will be used for training
+INPUT_TESTING_FILE - The output file of the former step, which will be used for testing
 Next, run in Python:
 
 PredictGeoGroup_ML_model
