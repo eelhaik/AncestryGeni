@@ -67,9 +67,9 @@ Update the variables in `config_CP.json` as follows:
 - **INPUT_TESTING_FILE**: The output file of the former step, which will be used for testing.
 
 Next, run in Python:
-```bash
-python PredictContinentalPopulations.py
-```
+
+PredictGeoGroup_ML_model
+
 
 ### Output
 The `Output.txt` file will have the continental codes.
