@@ -71,9 +71,6 @@ Next, run in Python:
 PredictGeoGroup_ML_model
 
 
-### Output
-The `Output.txt` file will have the continental codes.
-
 ## 6. Example Files
 Example files are shown in the `Example` folder.
 **Note:** All genetic data was deleted for privacy reasons.
