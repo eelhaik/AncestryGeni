@@ -1,0 +1,32 @@
+PLINK v1.90b3y 64-bit (4 Nov 2015)
+Options in effect:
+  --bfile /lunarc/nobackup/projects/snic2019-34-3/shared_elhaik_lab1/Projects/Linda/RNASeq_output/temp
+  --double-id
+  --make-bed
+  --out /lunarc/nobackup/projects/snic2019-34-3/shared_elhaik_lab1/Projects/Linda/RNASeq_output/MMRF_1736
+
+Hostname: cosmos3
+Working directory: /lunarc/nobackup/projects/snic2019-34-3/shared_elhaik_lab1/Projects/Linda/CommandCenter
+Start time: Wed Jan  3 02:21:34 2024
+
+Random number seed: 1704244894
+515052 MB RAM detected; reserving 257526 MB for main workspace.
+3667 variants loaded from .bim file.
+1 person (0 males, 0 females, 1 ambiguous) loaded from .fam.
+Ambiguous sex ID written to
+/lunarc/nobackup/projects/snic2019-34-3/shared_elhaik_lab1/Projects/Linda/RNASeq_output/MMRF_1736.nosex
+.
+Using 1 thread (no multithreaded calculations invoked.
+Before main variant filters, 1 founder and 0 nonfounders present.
+Calculating allele frequencies... done.
+3667 variants and 1 person pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+/lunarc/nobackup/projects/snic2019-34-3/shared_elhaik_lab1/Projects/Linda/RNASeq_output/MMRF_1736.bed
++
+/lunarc/nobackup/projects/snic2019-34-3/shared_elhaik_lab1/Projects/Linda/RNASeq_output/MMRF_1736.bim
++
+/lunarc/nobackup/projects/snic2019-34-3/shared_elhaik_lab1/Projects/Linda/RNASeq_output/MMRF_1736.fam
+... done.
+
+End time: Wed Jan  3 02:21:34 2024

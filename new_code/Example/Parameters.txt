@@ -1,0 +1,24 @@
+#Parameters_RNA.txt
+#ADMIXTURE tool installation folder
+ADMIXTURE_DIR="Admixture/admixture32"
+#Input folder for the vcf files 
+INPUT_DIR="RNASeq/"
+#Output folders
+OUTPUT_DIR="/RNASeq_output/"
+OUTPUT_DIR_1KG="/RNASeq_1kg/"
+OUTPUT_DIR_FINAL="/RNASeq_final/"
+OUTPUT_ADMIXTURE_DIR="/Example/"
+#Output file for the counts
+OUTPUT_FILE_TABLE="RNASeq.txt"
+OUTPUT_FILE="RNASeq_counts.txt"
+#Define the tool name
+DB_NAME="RNASeq"
+#The number of samples in files. 1 for Germline_GATK_HaplotypeCaller & Germline_Strelka2. 2 for Somatic_Verdict
+NUM_OF_LINES="1"
+#Admixture Ref files
+REF_CHR_POS="/ReferencePops/GRC38/Admixture_reference_pops.chr_pos"
+ADMIXTURE_REFERENCE_POPS="/ReferencePops/GRC38/Admixture_reference_pops"
+REF_SNPS="/ReferencePops/GRC38/SNPs.txt"
+BIM_NO_RS="/ReferencePops/GRC38/Admixture_reference_pops_no_rs.bim"
+#Analyze only 1200 SNPs
+REDUCE_SNP_SET="0"

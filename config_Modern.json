@@ -1,0 +1,15 @@
+{
+	// Folders
+	"INPUT_FOLDER": "D:\\My Documents\\University\\Elhaik Lab\\SubProjects\\Complex phenotypes\\rs9344\\1KG", 
+	"TRAINING_FILE": "1KG_Dataset_full.txt", 
+	"INPUT_FOLDER_MODERN": "D:\\My Documents\\University\\Elhaik Lab\\SubProjects\\Complex phenotypes\\rs9344\\ModernSamples", 
+	"TRAINING_MODERN_FILE": "ModernSamples_full.txt", 
+	"MODEL_DIR": "./SA_spatiotemporal/models",
+	"N_SPLITS": 8,
+	
+	  // The names of the columns of the era
+	  "COLS": {
+	    "ANCESTRAL": ["Africans", "Asians", "Europeans", "Indians", "NativeAmericans"],
+	    "TARGET": ["Code"]
+	  },	
+}
