@@ -70,7 +70,6 @@ Next, run in Python:
 
 PredictGeoGroup_ML_model
 
-
 ## 6. Example Files
 Example files are shown in the `Example` folder.
 **Note:** All genetic data was deleted for privacy reasons.
@@ -79,3 +78,28 @@ Example files are shown in the `Example` folder.
 
 - **For GRC37 Files**: The pipeline will perform a liftover to GRC38.
 - **For GRC38 Files**: No liftover is required.
+
+## Citation
+
+If you use this code, please cite the following paper:
+
+**AncestryGeni: A novel genetic ancestry pipeline for small and noisy sequence data**  
+*Eran Elhaik, Sara Behnamian, Michael Howe, Hongwei Tang, Huihuang Yan, Shulan Tian,  
+Suganti Shivaram, Cinthya Zepeda Mendoza, Kylee MacLachlan, Saad Usmani,  
+Mehdi Pirooznia, Gareth Morgan, Patrick Blaney, Francesco Maura, Linda B. Baughn*  
+
+**Preprint/Paper Link:** [I will update this part later]  
+
+---
+
+## License
+
+This program is free software: you can redistribute it and/or modify  
+it under the terms of the **GNU General Public License v3 (GPL-3.0)** as  
+published by the Free Software Foundation, either version 3 of the License,  
+or (at your option) any later version.  
+
+This program is distributed in the hope that it will be useful,  
+but **WITHOUT ANY WARRANTY**; without even the implied warranty of  
+**MERCHANTABILITY** or **FITNESS FOR A PARTICULAR PURPOSE**. See the  
+[GNU General Public License](https://www.gnu.org/licenses/) for more details.
