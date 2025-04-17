@@ -33,7 +33,7 @@ PredictGeoGroup/
 - **`module_model_executor.py`**: Manages machine learning model training, evaluation, and execution.
 - **`FilterPFile.py`**: Filters and processes genetic data files.
 - **`AnalyzeVEPFile.py`**: Analyzes variant effect prediction (VEP) results.
-- **`PredictContinentalPopulations.py`**: Runs a high-level prediction of ancestry at the continental level.
+- **`PredictGeoGroup.py `**: Runs a high-level prediction of ancestry at the continental level.
 - **`lda_performance_viz.py`**: Visualizes performance metrics of LDA models.
 
 ## Model Comparison & Tuning
