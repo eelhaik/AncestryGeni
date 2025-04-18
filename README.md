@@ -46,8 +46,6 @@ These folders need to be created manually as they are used by various scripts in
 ## 4. Running the Pipeline
 
 ### Command
-Download: http://www.eranelhaiklab.org/Files/AncestryGeni/ReferencePops.zip
-and unzip it
 ./Run_AncestryGeni.txt
 
 ### Output
@@ -55,26 +53,63 @@ and unzip it
 - All output folders will be populated.
 - Two output files will be generated (e.g., `RNASeq.txt`, `RNASeq_counts.txt`).
 
-## 5. Calculating continental populations
-Update the variables in config_CP.json as follows:
+## Directory Structure
+- **PredictGeoGroup_ML_model/**: Contains the machine learning models and scripts for geographic prediction
+  - `README_PredictGeoGroup.md`: Detailed documentation for the ML model components, including:
+    - Two-stage prediction pipeline (PredictGeoGroup1.py and PredictGeoGroup2.py)
+    - Model tuning and visualization tools
+    - Configuration options and dependencies
+  - `tuning_and_vis/`: Contains scripts for model tuning and visualization
+  - Main prediction scripts: `PredictGeoGroup1.py` and `PredictGeoGroup2.py`
+  - Configuration files: `config.json`, `config_CP.json`, `config_Modern.json`
 
-INPUT_TRAINING_FOLDER - The input folder
+## 5. Continental Population Prediction - Stage 1 (PredictGeoGroup1)
 
-INPUT_TESTING_FOLDER - The output folder
+The first stage uses PredictGeoGroup1.py to assign individuals to continental ancestry groups. This stage provides the initial ancestry estimation that forms the basis for more detailed analysis. It also generates a confusion matrix to evaluate the model's performance.
 
-INPUT_TRAINING_FILE - The output file of the former step, which will be used for training
+## 6. Continental Population Prediction - Stage 2 (PredictGeoGroup2)
 
-INPUT_TESTING_FILE - The output file of the former step, which will be used for testing
+This stage provides more detailed interpretation, particularly for highly admixed individuals and model confidence. It reports top-1 and top-2 classification probabilities for each individual, helping to identify borderline cases and provide more nuanced ancestry predictions.
 
-Next, run in Python:
+### Configuration
+Users configure a separate JSON file (config.json) specifying:
+- Training and testing data files
+- Ancestry component columns
+- Classification parameters
 
-PredictGeoGroup_ML_model
+### Analysis Features
+- Sample filtering and normalization
+- Stratified splitting
+- Supervised model training and prediction
+- Support for both broad and fine-scale ancestry input
+- Detailed Excel reports and visualizations
+- Confusion matrices and probability heatmaps
 
-## 6. Example Files
+### Output Files
+- Individual-level predictions (*_with_predictions.csv)
+- Performance summaries (output_basic.txt, output_detailed.txt)
+- Trained model files (best_model.pkl)
+
+### Performance Metrics
+- Accuracy
+- F1-score
+- Precision
+- Recall
+- Cohen's kappa
+- Matthews correlation coefficient (MCC)
+- Confusion matrices
+
+### System Requirements
+- Python 3
+- Standard scientific libraries (numpy, pandas, scikit-learn, joblib, commentjson)
+- 1-2 GB RAM for supervised classification
+- 4-8 CPU threads recommended for ADMIXTURE analysis (up to 8 GB RAM)
+
+## 7. Example Files
 Example files are shown in the `Example` folder.
 **Note:** All genetic data was deleted for privacy reasons.
 
-## 7. Handling Different Human Builds
+## 8. Handling Different Human Builds
 
 - **For GRC37 Files**: The pipeline will perform a liftover to GRC38.
 - **For GRC38 Files**: No liftover is required.
