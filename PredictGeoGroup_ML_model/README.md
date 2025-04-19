@@ -84,3 +84,192 @@ PredictGeoGroup/
 
 ## Contact
 For inquiries or contributions, feel free to reach out or open an issue in the repository.
+
+## Configuration Files
+
+### 1. config.json
+Controls the ML model's behavior and data processing:
+
+```json
+{
+    "INPUT_TRAINING_FOLDER": "./training_data",
+    "INPUT_TESTING_FOLDER": "./testing_data",
+    "INPUT_TRAINING_FILE": "training.txt",
+    "INPUT_TESTING_FILE": ["test.txt"],
+    "SPLIT_DATA": 1,
+    "MMRF_DATA": 0,
+    "N_SPLITS": 10,
+    "COLS": {
+        "TARGET": ["Code"],
+        "ANNOT": ["Dataset", "Sample", "SampleCode"]
+    }
+}
+```
+
+#### Parameters Explained:
+- **Input/Output Settings**
+  - `INPUT_TRAINING_FOLDER`: Directory containing training data
+  - `INPUT_TESTING_FOLDER`: Directory containing test data
+  - `INPUT_TRAINING_FILE`: Training data filename
+  - `INPUT_TESTING_FILE`: Array of test data filenames
+
+- **Processing Options**
+  - `MMRF_DATA`: Toggle MMRF data handling (0/1)
+  - `SPLIT_DATA`: Enable data splitting (0/1)
+  - `N_SPLITS`: Number of cross-validation splits
+
+- **Column Specifications**
+  - `COLS.TARGET`: Target column for prediction
+  - `COLS.ANNOT`: Annotation columns
+
+### 2. Parameters.txt
+Controls pipeline execution and data flow:
+
+```
+ADMIXTURE_DIR=/path/to/admixture
+INPUT_DIR=/path/to/vcf/files
+OUTPUT_DIR=/path/to/output
+OUTPUT_DIR_1KG=/path/to/1kg/output
+OUTPUT_DIR_FINAL=/path/to/final/output
+OUTPUT_ADMIXTURE_DIR=/path/to/admixture/output
+OUTPUT_FILE_TABLE=ancestry_counts.txt
+OUTPUT_FILE=snp_counts.txt
+DB_NAME=my_dataset
+NUM_OF_LINES=1
+```
+
+#### Parameters Explained:
+- **Directory Settings**
+  - `ADMIXTURE_DIR`: ADMIXTURE software location
+  - `INPUT_DIR`: VCF files directory
+  - `OUTPUT_DIR`: Main results directory
+  - `OUTPUT_DIR_1KG`: 1000 Genomes output
+  - `OUTPUT_DIR_FINAL`: Final results location
+  - `OUTPUT_ADMIXTURE_DIR`: ADMIXTURE analysis directory
+
+- **Output Files**
+  - `OUTPUT_FILE_TABLE`: Ancestry counts file
+  - `OUTPUT_FILE`: SNP analysis quality control
+  - `DB_NAME`: Dataset identifier
+  - `NUM_OF_LINES`: Sample line count (1 for GATK, 2 for Somatic)
+
+## Running the Pipeline
+
+1. **Stage 1: Basic Ancestry Prediction**
+```bash
+python PredictGeoGroup1.py
+```
+- Assigns continental ancestry groups
+- Generates confusion matrix
+- Outputs basic predictions
+
+2. **Stage 2: Detailed Analysis**
+```bash
+python PredictGeoGroup2.py
+```
+- Analyzes admixed individuals
+- Reports classification probabilities
+- Creates detailed visualizations
+
+## Output Files
+
+- **Predictions**: `*_with_predictions.csv`
+- **Performance**: `output_basic.txt`, `output_detailed.txt`
+- **Models**: `best_model.pkl`
+- **Visualizations**: Confusion matrices, probability heatmaps
+
+## Performance Metrics
+
+- Accuracy
+- F1-score
+- Precision/Recall
+- Cohen's kappa
+- Matthews correlation coefficient (MCC)
+
+## System Requirements
+
+- Python 3.x
+- Scientific libraries (numpy, pandas, scikit-learn)
+- 1-2 GB RAM for classification
+- 4-8 CPU threads recommended
+
+## Ancestry Codes
+
+- 1: White/European
+- 2: Black/African
+- 3: Hispanic
+- 4: Asian
+- 6: Other
+
+## Getting Started with the Toy Dataset
+
+The `Toy_dataset` directory contains example data to help you understand and test the pipeline:
+
+### Input Data Format
+The toy dataset `mixed_samples.xlsx` follows the required format:
+- Excel file with ancestry components as columns
+- Each row represents one sample
+- Values should be proportions (0-1) or percentages (0-100)
+- Required columns: AFR, AMR, EAS, EUR, SAS (representing African, American, East Asian, European, and South Asian ancestry components)
+
+### Running the Models
+
+1. Stage 1 - Basic Prediction:
+```bash
+cd PredictGeoGroup_ML_model
+python PredictGeoGroup1.py --input Toy_dataset/mixed_samples.xlsx
+```
+
+2. Stage 2 - Detailed Analysis:
+```bash
+python PredictGeoGroup2.py --input Toy_dataset/mixed_samples.xlsx
+```
+
+### Expected Output
+The models will generate:
+- `predictions.csv`: Contains basic predictions for each sample with continental ancestry assignments
+- `detailed_analysis.csv`: Includes probability scores, confidence metrics, and detailed ancestry breakdowns
+- Visualization plots in the `plots` directory:
+  - ROC curves for each ancestry component
+  - Precision-Recall curves
+  - Confusion matrices
+  - Probability heatmaps
+
+### Configuration
+Default configuration files are provided in `Toy_dataset/config`:
+- `model_params.json`: ML model parameters including:
+  - Feature selection thresholds
+  - Model hyperparameters
+  - Cross-validation settings
+- `thresholds.json`: Classification thresholds for:
+  - Minimum confidence scores
+  - Borderline case definitions
+  - Multi-ancestry detection
+- `component_weights.json`: Feature importance weights for:
+  - Each ancestry component
+  - SNP selection criteria
+  - Quality control parameters
+
+### Example Output Interpretation
+1. Basic Prediction (`predictions.csv`):
+   - Sample ID
+   - Predicted ancestry group
+   - Confidence score
+   - Top contributing components
+
+2. Detailed Analysis (`detailed_analysis.csv`):
+   - Sample ID
+   - Top-1 and Top-2 ancestry predictions
+   - Probability scores for each ancestry component
+   - Borderline case flag
+   - Quality metrics
+
+### Troubleshooting
+Common issues and solutions:
+1. File not found: Ensure you're in the correct directory and file paths are correct
+2. Format errors: Verify your input file matches the required format
+3. Memory issues: Reduce sample size or increase system memory
+4. Configuration errors: Check JSON files for valid syntax
+
+## Using Your Own Data
+[Rest of the README remains the same...]
