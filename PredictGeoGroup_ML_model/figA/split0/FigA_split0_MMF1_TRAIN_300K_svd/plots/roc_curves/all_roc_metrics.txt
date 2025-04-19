@@ -1,0 +1,32 @@
+AUC Values
+==========
+
+100.csv:
+--------
+European: 0.9098
+African: 0.9903
+Asian: 0.9040
+
+10K.csv:
+--------
+European: 0.9944
+African: 1.0000
+Asian: 1.0000
+
+1K.csv:
+-------
+European: 0.9778
+African: 0.9852
+Asian: 0.9978
+
+300K.csv:
+---------
+European: 1.0000
+African: 1.0000
+Asian: 1.0000
+
+50K.csv:
+--------
+European: 0.9944
+African: 1.0000
+Asian: 1.0000
