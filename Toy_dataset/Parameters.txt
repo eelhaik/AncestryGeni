@@ -1,0 +1,24 @@
+#Parameters.txt
+#ADMIXTURE tool installation folder
+ADMIXTURE_DIR=""
+#Input folder for the vcf files
+INPUT_DIR="/"
+#Output folders
+OUTPUT_DIR="/"
+OUTPUT_DIR_1KG="/"
+OUTPUT_DIR_FINAL="/"
+OUTPUT_ADMIXTURE_DIR="/"
+#Output file for the counts
+OUTPUT_FILE_TABLE=""
+OUTPUT_FILE=""
+#Define the tool name
+DB_NAME=""
+#The number of samples in files. 1 for Germline_GATK_HaplotypeCaller & Germline_Strelka2. 2 for Somatic_Verdict
+NUM_OF_LINES="1"
+#Admixture Ref files
+REF_CHR_POS="/ReferencePops/GRC38/Admixture_reference_pops.chr_pos"
+ADMIXTURE_REFERENCE_POPS="/ReferencePops/GRC38/Admixture_reference_pops"
+REF_SNPS="/ReferencePops/GRC38/SNPs.txt"
+BIM_NO_RS="/ReferencePops/GRC38/Admixture_reference_pops_no_rs.bim"
+#Analyze only 1200 SNPs
+REDUCE_SNP_SET="0"

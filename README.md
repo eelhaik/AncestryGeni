@@ -1,128 +1,156 @@
-# Ancestry Pipeline README
+# AncestryGeni Pipeline
 
-This pipeline is designed for human genome builds GRC37 and GRC38.
+AncestryGeni is a novel ancestry pipeline for small and noisy sequence data that identifies continental populations from genomic data. The pipeline supports human genome builds GRCh37 and GRCh38.
 
-## 1. Setting Up the Parameters File
+## Quick Start
 
-### File: `Parameters.txt`
-- **Do Not Rename**: The pipeline scripts are hardcoded to read from `Parameters.txt`.
+```bash
+git clone https://github.com/eelhaik/AncestryGeni.git
+cd AncestryGeni
+```
 
-### Parameters Overview
+## Example Usage with Toy Dataset
 
-- **ADMIXTURE_DIR**: Directory where the ADMIXTURE tool is installed.
-- **INPUT_DIR**: Directory containing raw VCF files of the samples.
+We provide a toy dataset to help you get started and test the pipeline:
 
-### Output Folders
-These folders need to be created manually as they are used by various scripts in the pipeline:
-- **OUTPUT_DIR**: Main output directory.
-- **OUTPUT_DIR_1KG**: Output directory for 1KG data.
-- **OUTPUT_DIR_FINAL**: Final output directory.
-- **OUTPUT_ADMIXTURE_DIR**: Directory where you will run the pipeline.
+```bash
+# Navigate to the ML model directory
+cd PredictGeoGroup_ML_model
 
-### Output Files
-- **OUTPUT_FILE_TABLE**: Main output file containing ancestry counts.
-- **OUTPUT_FILE**: File listing the number of SNPs analyzed per sample (useful for quality control).
+# Run Stage 1 prediction using toy data
+python PredictGeoGroup1.py --input Toy_dataset/mixed_samples.xlsx
 
-### Reference Population Files (GRC38 Folder)
-- **REF_CHR_POS**: `ReferencePops/GRC38/Admixture_reference_pops.chr_pos`
-- **ADMIXTURE_REFERENCE_POPS**: `ReferencePops/GRC38/Admixture_reference_pops`
-- **REF_SNPS**: `ReferencePops/GRC38/SNPs.txt`
-- **BIM_NO_RS**: `ReferencePops/GRC38/Admixture_reference_pops_no_rs.bim`
+# Run Stage 2 detailed analysis
+python PredictGeoGroup2.py --input Toy_dataset/mixed_samples.xlsx
+```
 
-### Additional Parameters
-- **DB_NAME**: Name of the dataset being analyzed; used in `OUTPUT_FILE_TABLE` to differentiate results.
-- **NUM_OF_LINES**: Number of lines per sample in the files (e.g., 1 for `Germline_GATK_HaplotypeCaller`, 2 for `Somatic_Verdict`).
+The toy dataset includes:
+- `mixed_samples.xlsx`: Sample genetic data with known ancestry components
+- Example configuration files
+- Expected output examples
 
-## 2. Installing ADMIXTURE
+This will generate:
+- Basic ancestry predictions
+- Detailed probability analysis
+- Visualization plots
+- Performance metrics
 
-### Installation Instructions
-- Install ADMIXTURE from the provided zip file located in the `Admixture` folder.
+## Configuration Files
 
-## 3. Setting Up the `OUTPUT_ADMIXTURE_DIR`
+### 1. Parameters.txt
+Main pipeline configuration file:
 
-- Use this directory to execute all pipeline commands.
-- This directory should contain pipeline files, associated files, and the liftover tool.
+```
+ADMIXTURE_DIR=/path/to/admixture
+INPUT_DIR=/path/to/vcf/files
+OUTPUT_DIR=/path/to/output
+OUTPUT_DIR_1KG=/path/to/1kg/output
+OUTPUT_DIR_FINAL=/path/to/final/output
+OUTPUT_ADMIXTURE_DIR=/path/to/admixture/output
+OUTPUT_FILE_TABLE=ancestry_counts.txt
+OUTPUT_FILE=snp_counts.txt
+DB_NAME=my_dataset
+NUM_OF_LINES=1
+```
 
-## 4. Running the Pipeline
+#### Key Parameters:
+- **Software & Input**
+  - `ADMIXTURE_DIR`: ADMIXTURE installation directory
+  - `INPUT_DIR`: Directory with VCF files
 
-### Command
-./Run_AncestryGeni.txt
+- **Output Directories** (create these before running)
+  - `OUTPUT_DIR`: Main results
+  - `OUTPUT_DIR_1KG`: 1000 Genomes results
+  - `OUTPUT_DIR_FINAL`: Final output
+  - `OUTPUT_ADMIXTURE_DIR`: ADMIXTURE analysis
 
-### Output
-- The pipeline will run four scripts and clean up temporary files.
-- All output folders will be populated.
-- Two output files will be generated (e.g., `RNASeq.txt`, `RNASeq_counts.txt`).
+- **Output Files**
+  - `OUTPUT_FILE_TABLE`: Ancestry counts
+  - `OUTPUT_FILE`: SNP analysis QC
+  - `DB_NAME`: Dataset identifier
+  - `NUM_OF_LINES`: Sample line count
 
-## Directory Structure
-- **PredictGeoGroup_ML_model/**: Contains the machine learning models and scripts for geographic prediction
-  - `README_PredictGeoGroup.md`: Detailed documentation for the ML model components, including:
-    - Two-stage prediction pipeline (PredictGeoGroup1.py and PredictGeoGroup2.py)
-    - Model tuning and visualization tools
-    - Configuration options and dependencies
-  - `tuning_and_vis/`: Contains scripts for model tuning and visualization
-  - Main prediction scripts: `PredictGeoGroup1.py` and `PredictGeoGroup2.py`
-  - Configuration files: `config.json`, `config_CP.json`, `config_Modern.json`
+### 2. config.json
+ML model configuration:
 
-## 5. Continental Population Prediction - Stage 1 (PredictGeoGroup1)
+```json
+{
+    "INPUT_TRAINING_FOLDER": "./training_data",
+    "INPUT_TESTING_FOLDER": "./testing_data",
+    "INPUT_TRAINING_FILE": "training.txt",
+    "INPUT_TESTING_FILE": ["test.txt"],
+    "SPLIT_DATA": 1,
+    "MMRF_DATA": 0,
+    "N_SPLITS": 10,
+    "COLS": {
+        "TARGET": ["Code"],
+        "ANNOT": ["Dataset", "Sample", "SampleCode"]
+    }
+}
+```
 
-The first stage uses PredictGeoGroup1.py to assign individuals to continental ancestry groups. This stage provides the initial ancestry estimation that forms the basis for more detailed analysis. It also generates a confusion matrix to evaluate the model's performance.
+#### Key Settings:
+- **Data Paths**
+  - Training/testing directories and files
+  - Support for multiple test files
 
-## 6. Continental Population Prediction - Stage 2 (PredictGeoGroup2)
+- **Processing Options**
+  - `MMRF_DATA`: Special handling for MMRF data
+  - `SPLIT_DATA`: Data splitting control
+  - `N_SPLITS`: Cross-validation splits
 
-This stage provides more detailed interpretation, particularly for highly admixed individuals and model confidence. It reports top-1 and top-2 classification probabilities for each individual, helping to identify borderline cases and provide more nuanced ancestry predictions.
+## Running the Pipeline
 
-### Configuration
-Users configure a separate JSON file (config.json) specifying:
-- Training and testing data files
-- Ancestry component columns
-- Classification parameters
+1. **Setup Parameters**
+   - Configure `Parameters.txt`
+   - Configure `config.json`
+   - Create output directories
 
-### Analysis Features
-- Sample filtering and normalization
-- Stratified splitting
-- Supervised model training and prediction
-- Support for both broad and fine-scale ancestry input
-- Detailed Excel reports and visualizations
-- Confusion matrices and probability heatmaps
+2. **Run Pipeline**
+```bash
+cd pipeline_setup
+bash Run_AncestryGeni.txt
+```
 
-### Output Files
-- Individual-level predictions (*_with_predictions.csv)
-- Performance summaries (output_basic.txt, output_detailed.txt)
-- Trained model files (best_model.pkl)
+3. **Run ML Model**
+```bash
+cd ../PredictGeoGroup_ML_model
+python PredictGeoGroup1.py  # Basic ancestry
+python PredictGeoGroup2.py  # Detailed analysis
+```
 
-### Performance Metrics
-- Accuracy
-- F1-score
-- Precision
-- Recall
-- Cohen's kappa
-- Matthews correlation coefficient (MCC)
-- Confusion matrices
+## Output Files
 
-### System Requirements
-- Python 3
-- Standard scientific libraries (numpy, pandas, scikit-learn, joblib, commentjson)
-- 1-2 GB RAM for supervised classification
-- 4-8 CPU threads recommended for ADMIXTURE analysis (up to 8 GB RAM)
+- **Ancestry Results**
+  - `*_counts.txt`: Ancestry proportions
+  - `*.txt`: SNP coverage metrics
 
-## 7. Example Files
-Example files are shown in the `Example` folder.
-**Note:** All genetic data was deleted for privacy reasons.
+- **ML Analysis**
+  - Predictions: `*_with_predictions.csv`
+  - Performance: `output_basic.txt`, `output_detailed.txt`
+  - Models: `best_model.pkl`
+  - Visualizations: Matrices and heatmaps
 
-## 8. Handling Different Human Builds
+## System Requirements
 
-- **For GRC37 Files**: The pipeline will perform a liftover to GRC38.
-- **For GRC38 Files**: No liftover is required.
+- Python 3.x
+- Scientific libraries (numpy, pandas, scikit-learn)
+- 1-2 GB RAM for ML
+- 4-8 CPU threads for ADMIXTURE
+
+## Reference Population Files
+
+For GRC38:
+- `ReferencePops/GRC38/Admixture_reference_pops.chr_pos`
+- `ReferencePops/GRC38/Admixture_reference_pops`
+- `ReferencePops/GRC38/SNPs.txt`
+- `ReferencePops/GRC38/Admixture_reference_pops_no_rs.bim`
 
 ## Citation
 
-If you use this code, please cite the following paper:
-
 **AncestryGeni: A novel genetic ancestry pipeline for small and noisy sequence data**  
-*Eran Elhaik, Sara Behnamian, Michael Howe, Hongwei Tang, Huihuang Yan, Shulan Tian,  
+_Eran Elhaik, Sara Behnamian, Michael Howe, Hongwei Tang, Huihuang Yan, Shulan Tian,  
 Suganti Shivaram, Cinthya Zepeda Mendoza, Kylee MacLachlan, Saad Usmani,  
-Mehdi Pirooznia, Gareth Morgan, Patrick Blaney, Francesco Maura, Linda B. Baughn*  
-
-**Preprint/Paper Link:** [I will update this part later]  
+Mehdi Pirooznia, Gareth Morgan, Patrick Blaney, Francesco Maura, Linda B. Baughn_
 
 ---

@@ -1,0 +1,76 @@
+{
+	// Change the "INPUT_TRAINING_FILE" to get the columns in the Excel file
+	// Analyses of 1KG with various number of SNPs and the original 1KG cohort (Figure A)
+#	"INPUT_TRAINING_FOLDER": "D:\\AncestryGeni\\Data\\Input_1KG", 
+#	"INPUT_TESTING_FOLDER": "D:\\AncestryGeni\\Data\\Input_1KG", 
+#	"INPUT_TRAINING_FILE": "100.txt", 
+#	"INPUT_TESTING_FILE": ["300K.txt", "50K.txt", "10K.txt", "1K.txt", "100.txt"], 
+#	"SPLIT_DATA": 1, // Used to calculate the main diagonal, otherwise use 0
+#	"MMRF_DATA": 1, // if 1 - remove codes 3 and 6
+
+	// Analyses of 1KG with various number of SNPs and a new 1KG cohort (Figure B)
+#	"INPUT_TRAINING_FOLDER": "D:\\AncestryGeni\\Data\\Input_1KG_Other_Samples", 
+#	"INPUT_TESTING_FOLDER": "D:\\AncestryGeni\\Data\\Input_1KG_Other_Samples", 
+#	"INPUT_TRAINING_FILE": "100.txt", 
+#	"INPUT_TESTING_FILE": ["300K.txt", "50K.txt", "10K.txt", "1K.txt", "100.txt"], 
+#	"SPLIT_DATA": 1, // Used to calculate the main diagonal, otherwise use 0
+#	"MMRF_DATA": 0, // if 1 - remove codes 3 and 6
+
+	// Analyses of the full datasets (Figure C)
+#	"INPUT_TRAINING_FOLDER": "D:\\AncestryGeni\\Data\\Input_full", 
+#	"INPUT_TESTING_FOLDER": "D:\\AncestryGeni\\Data\\Input_full", 
+#	"INPUT_TRAINING_FILE": "RNASeq.txt", 
+#	"INPUT_TESTING_FILE": ["1KG.txt", "Germline_GATK_HaplotypeCaller.txt", "Germline_Strelka2.txt", "Somatic_Verdict.txt", "RNASeq.txt"], 
+#	"SPLIT_DATA": 1, 
+#	"MMRF_DATA": 1, #if 1 - remove codes 3 and 6
+
+	// Analyses of 1200 SNP datasets (Figure D)
+	"INPUT_TRAINING_FOLDER": "D:\\AncestryGeni\\Data\\Input_1k", 
+	"INPUT_TESTING_FOLDER": "D:\\AncestryGeni\\Data\\Input_1k", 
+	"INPUT_TRAINING_FILE": "RNASeq.txt", 
+	"INPUT_TESTING_FILE": ["1KG_1k.txt", "Germline_GATK_HaplotypeCaller_1k.txt", "Germline_Strelka2_1k.txt", "Somatic_Verdict_1k.txt", "RNASeq.txt"], 
+	"SPLIT_DATA": 1, 
+	"MMRF_DATA": 1, #if 1 - remove codes 3 and 6
+
+
+	// "MODEL_DIR": "./SA_spatiotemporal/models",
+	"N_SPLITS":10,
+	
+	  // The names of the columns of the era
+	  "COLS": {
+	    "TARGET": ["Code"],
+	    "ANNOT": ["Dataset", "Sample", "SampleCode"]
+	  },	
+}
+
+/*
+Configuration File Explanation:
+
+1. Input/Output Paths:
+   - INPUT_TRAINING_FOLDER: Directory containing training data
+   - INPUT_TRAINING_FILE: File with training samples
+   - INPUT_TESTING_FOLDER: Directory containing test data
+   - INPUT_TESTING_FILE: File with test samples
+
+2. Data Processing Options:
+   - MMRF_DATA: Set to true if using Multiple Myeloma Research Foundation data format
+   - SPLIT_DATA: Whether to split data into training/testing sets
+   - N_SPLITS: Number of cross-validation splits
+   - RANDOM_STATE: Random seed for reproducibility
+   - TEST_SIZE: Proportion of data to use for testing (0.2 = 20%)
+   - NORMALIZATION_THRESHOLD: Values below this are set to 0
+
+3. Column Specifications:
+   - TARGET: Column name containing ancestry codes
+   - FEATURES: List of ancestry components used for prediction
+     * Africans: African ancestry proportion
+     * Asians: Asian ancestry proportion
+     * Europeans: European ancestry proportion
+     * Indians: Indian subcontinent ancestry proportion
+     * NativeAmericans: Native American ancestry proportion
+
+4. Usage Notes:
+   - All paths should be relative to the project root
+   - Feature names must match column names in your data
+   - Ancestry codes: 1=white, 2=black, 3=hispanic, 4=Asian, 6=other
+*/
