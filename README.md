@@ -17,10 +17,10 @@ We provide a toy dataset to help you get started and test the pipeline:
 # Navigate to the ML model directory
 cd PredictGeoGroup_ML_model
 
-# Run Stage 1 prediction using toy data
+# Run Stage 1: Continental ancestry prediction 
 python PredictGeoGroup1.py --input Toy_dataset/mixed_samples.xlsx
 
-# Run Stage 2 detailed analysis
+# Run Stage 2: 2-way continental ancestry prediction with probabilities
 python PredictGeoGroup2.py --input Toy_dataset/mixed_samples.xlsx
 ```
 
