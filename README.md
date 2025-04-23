@@ -67,8 +67,8 @@ AncestryGeni/
 ## First Stage: ADMIXTURE
 
 ### 1.1 Rationale
-The training process involves two main parts:
-1. Unsupervised ADMIXTURE is applied to a subset of reference individuals from the 1000 Genomes Project to identify 12 global gene pools (ancestry components).
+The process involves two main parts:
+1. Unsupervised ADMIXTURE is applied to a subset of reference individuals from the 1000 Genomes Project to identify global gene pools (ancestry components).
 2. Supervised ADMIXTURE estimates the ancestry proportions of each test sample based on these predefined components.
 
 ### 1.2 Files Needed
@@ -139,16 +139,16 @@ Performs initial ancestry classification using broad continental groups. This st
 - Confusion matrix for performance evaluation
 - Direct ancestry assignments
 
-### 2.2 Detailed Classification – PredictGeoGroup2.py
+### 2.2 2-way Classification – PredictGeoGroup2.py
 ```bash
 python PredictGeoGroup2.py
 ```
-Performs detailed prediction with:
+Performs 2-way prediction with:
 - Probability scores for each ancestry
 - Alternative ancestry possibilities
 - Analysis of admixed populations
 - Extensive visualizations
-- Detailed reports
+
 
 ### 2.3 Visualization Tools
 ```bash
