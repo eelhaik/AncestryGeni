@@ -1,6 +1,13 @@
 # AncestryGeni Pipeline
 
-AncestryGeni is a novel ancestry pipeline for small and noisy sequence data that identifies continental populations from genomic data. The pipeline supports human genome builds GRCh37 and GRCh38.
+AncestryGeni is a novel ancestry pipeline for small and noisy sequence data that identifies continental populations from genomic data. The pipeline supports human genome builds GRCh37 and GRCh38 and is compatible with a variety of sequencing data types, including whole-genome sequencing (WGS), whole-exome sequencing (WES), and RNA-Seq.
+
+## Pipeline Overview
+
+The pipeline operates in two main stages:
+
+1. **First Stage (ADMIXTURE)**: Defines 12 global gene pools using unsupervised ADMIXTURE on reference individuals, followed by supervised ADMIXTURE to estimate ancestry proportions of test samples.
+2. **Second Stage (Machine Learning)**: Applies a supervised machine learning model to predict continental affiliations based on inferred ancestry proportions.
 
 ## Quick Start
 
@@ -9,37 +16,78 @@ git clone https://github.com/eelhaik/AncestryGeni.git
 cd AncestryGeni
 ```
 
-## Example Usage with Toy Dataset
+## Directory Structure
 
-We provide a toy dataset to help you get started and test the pipeline:
-
-```bash
-# Navigate to the ML model directory
-cd PredictGeoGroup_ML_model
-
-# Run Stage 1: Continental ancestry prediction 
-python PredictGeoGroup1.py --input Toy_dataset/mixed_samples.xlsx
-
-# Run Stage 2: 2-way continental ancestry prediction with probabilities
-python PredictGeoGroup2.py --input Toy_dataset/mixed_samples.xlsx
+```
+AncestryGeni/
+├── 1_ADMIXTURE Stage/
+│   ├── Admixture/
+│   │   └── admixture32
+│   ├── Input data/
+│   │   └── ReferencePops.zip
+│   └── pipeline setup/
+│       ├── Admixture.sh
+│       ├── AnalyzeFiles.sh
+│       ├── Get1Kg.sh
+│       ├── Parameters.txt
+│       ├── Run_AncestryGeni.txt
+│       ├── Summarize_results_one_row.sh
+│       └── Summarize_results_two_row.sh
+└── 2_MACHINE Learning Stage/
+    ├── Comparing Different Classifications/
+    │   └── comparing_models.ipynb
+    ├── Example Output/
+    │   └── figA/
+    ├── Input data/
+    │   ├── Parameters.txt
+    │   ├── RNASeq.txt
+    │   └── RNASeq_1kg/
+    ├── Noise analysis/
+    │   ├── admix_3rd_Step_for_noise_analysis_and_plot.py
+    │   ├── filtering_1st_Step_for_noise_analysis.py
+    │   └── run_tests_with_filtered_samples_2nd_Step_for_noise_analysis.py
+    ├── Predict GeoGroup/
+    │   ├── AnalyzeVEPFile.py
+    │   ├── FilterPFile.py
+    │   ├── PredictGeoGroup1.py
+    │   ├── PredictGeoGroup2.py
+    │   ├── README.md
+    │   ├── config.json
+    │   ├── count_samples.py
+    │   ├── mixed_samples.xlsx
+    │   ├── module_model_executor.py
+    │   └── module_preprocessor.py
+    ├── Toy dataset for ML/
+    │   └── mixed_samples.xlsx
+    └── Tuning and Visualization/
+        ├── lda_performance_viz.py
+        └── tune_lda_parameters.py
 ```
 
-The toy dataset includes:
-- `mixed_samples.xlsx`: Sample genetic data with known ancestry components
-- Example configuration files
-- Expected output examples
+## First Stage: ADMIXTURE
 
-This will generate:
-- Basic ancestry predictions
-- Detailed probability analysis
-- Visualization plots
-- Performance metrics
+### 1.1 Rationale
+The training process involves two main parts:
+1. Unsupervised ADMIXTURE is applied to a subset of reference individuals from the 1000 Genomes Project to identify 12 global gene pools (ancestry components).
+2. Supervised ADMIXTURE estimates the ancestry proportions of each test sample based on these predefined components.
 
-## Configuration Files
+### 1.2 Files Needed
+Reference Population Data – `ReferencePops.zip` in the `1_ADMIXTURE Stage/Input data/` directory includes:
+- VCF files (Variant Call Format)
+- PLINK files (.bed, .bim, .fam)
+- Population metadata files
+- Geographic coordinates
 
-### 1. Parameters.txt
-Main pipeline configuration file:
+### 1.3 VCF to PLINK Conversion
+To convert a VCF file to PLINK format:
+```bash
+plink --vcf input.vcf --make-bed --out output_prefix
+```
 
+### 1.4 Configuration Files
+
+#### Parameters.txt
+Located in `1_ADMIXTURE Stage/pipeline setup/`:
 ```
 ADMIXTURE_DIR=/path/to/admixture
 INPUT_DIR=/path/to/vcf/files
@@ -53,26 +101,8 @@ DB_NAME=my_dataset
 NUM_OF_LINES=1
 ```
 
-#### Key Parameters:
-- **Software & Input**
-  - `ADMIXTURE_DIR`: ADMIXTURE installation directory
-  - `INPUT_DIR`: Directory with VCF files
-
-- **Output Directories** (create these before running)
-  - `OUTPUT_DIR`: Main results
-  - `OUTPUT_DIR_1KG`: 1000 Genomes results
-  - `OUTPUT_DIR_FINAL`: Final output
-  - `OUTPUT_ADMIXTURE_DIR`: ADMIXTURE analysis
-
-- **Output Files**
-  - `OUTPUT_FILE_TABLE`: Ancestry counts
-  - `OUTPUT_FILE`: SNP analysis QC
-  - `DB_NAME`: Dataset identifier
-  - `NUM_OF_LINES`: Sample line count
-
-### 2. config.json
-ML model configuration:
-
+#### config.json
+Located in `2_MACHINE Learning Stage/Predict GeoGroup/`:
 ```json
 {
     "INPUT_TRAINING_FOLDER": "./training_data",
@@ -89,62 +119,104 @@ ML model configuration:
 }
 ```
 
-#### Key Settings:
-- **Data Paths**
-  - Training/testing directories and files
-  - Support for multiple test files
-
-- **Processing Options**
-  - `MMRF_DATA`: Special handling for MMRF data
-  - `SPLIT_DATA`: Data splitting control
-  - `N_SPLITS`: Cross-validation splits
-
-## Running the Pipeline
-
-1. **Setup Parameters**
-   - Configure `Parameters.txt`
-   - Configure `config.json`
-   - Create output directories
-
-2. **Run Pipeline**
+### 1.5 Commands
+To set up and run the pipeline:
 ```bash
-cd pipeline_setup
+cd 1_ADMIXTURE Stage/pipeline setup
 bash Run_AncestryGeni.txt
 ```
 
-3. **Run ML Model**
+## Second Stage: Machine Learning Classification
+
+### 2.1 Basic Classification – PredictGeoGroup1.py
 ```bash
-cd ../PredictGeoGroup_ML_model
-python PredictGeoGroup1.py  # Basic ancestry
-python PredictGeoGroup2.py  # Detailed analysis
+cd ../2_MACHINE Learning Stage/Predict GeoGroup
+python PredictGeoGroup1.py
 ```
+Performs initial ancestry classification using broad continental groups. This stage provides:
+- Quick and efficient initial assessment
+- Broad ancestry categories (European, African, Asian, etc.)
+- Confusion matrix for performance evaluation
+- Direct ancestry assignments
+
+### 2.2 Detailed Classification – PredictGeoGroup2.py
+```bash
+python PredictGeoGroup2.py
+```
+Performs detailed prediction with:
+- Probability scores for each ancestry
+- Alternative ancestry possibilities
+- Analysis of admixed populations
+- Extensive visualizations
+- Detailed reports
+
+### 2.3 Visualization Tools
+```bash
+cd ../Tuning and Visualization
+python lda_performance_viz.py --input ../results/predictions.csv --output ./visualizations/
+```
+Provides ROC and PR curve visualizations.
+
+### 2.4 Usage Flow
+Recommended order of operations:
+1. Run `PredictGeoGroup1.py` for initial ancestry classification
+2. Run `PredictGeoGroup2.py` for deeper analysis
+3. Visualize results using `lda_performance_viz.py`
+
+## Example Usage with Toy Dataset
+
+The toy dataset is located in `2_MACHINE Learning Stage/Toy dataset for ML/`:
+- `mixed_samples.xlsx`: Sample genetic data with known ancestry components
+- Example configuration files
+- Expected output examples
+
+### Sample Data Format
+```
+Sample_Name    Original_HGDP_IDs    True_Ancestry    Predicted_Ancestry    Top1_Prediction    Top1_Probability    Top2_Prediction    Top2_Probability
+HGDP00336      HGDP00336            Europe-Europe    Europe-Europe         Europe-Europe      0.554318            Africa-Europe      0.445644
+```
+
+Important Notes:
+1. All ancestry proportions must be decimal numbers between 0 and 1
+2. Values use commas as decimal separators (European format)
+3. The sum of ancestry components must equal 1.0
+4. Sample_Name and Final_HGDP are identifiers
+5. Ancestry_Label indicates the known ancestry group
 
 ## Output Files
 
-- **Ancestry Results**
-  - `*_counts.txt`: Ancestry proportions
-  - `*.txt`: SNP coverage metrics
+### First Stage Outputs
+- `*.Q`: Ancestry proportions
+- `*.P`: Allele frequencies
+- `*.log`: Convergence and runtime info
 
-- **ML Analysis**
-  - Predictions: `*_with_predictions.csv`
-  - Performance: `output_basic.txt`, `output_detailed.txt`
-  - Models: `best_model.pkl`
-  - Visualizations: Matrices and heatmaps
+### Second Stage Outputs
+- `_with_predictions.csv`: Predicted ancestry
+- `output_basic.txt` / `output_detailed.txt`: Metrics
+- `best_model.pkl`: Saved model
+- Visualizations: Confusion matrix, heatmaps
+
+## Performance Metrics
+- Accuracy
+- F1-score
+- Precision/Recall
+- Cohen's kappa
+- MCC
 
 ## System Requirements
-
-- Python 3.x
-- Scientific libraries (numpy, pandas, scikit-learn)
-- 1-2 GB RAM for ML
-- 4-8 CPU threads for ADMIXTURE
+- Python 3.x (with numpy, pandas, scikit-learn, joblib, commentjson)
+- ADMIXTURE software
+- 1–2 GB RAM for classification
+- 4–8 CPU threads recommended
+- 8 GB RAM for ADMIXTURE
 
 ## Reference Population Files
-
-For GRC38:
-- `ReferencePops/GRC38/Admixture_reference_pops.chr_pos`
-- `ReferencePops/GRC38/Admixture_reference_pops`
-- `ReferencePops/GRC38/SNPs.txt`
-- `ReferencePops/GRC38/Admixture_reference_pops_no_rs.bim`
+Located in `1_ADMIXTURE Stage/Input data/ReferencePops.zip`:
+- For GRC38:
+  - `Admixture_reference_pops.chr_pos`
+  - `Admixture_reference_pops`
+  - `SNPs.txt`
+  - `Admixture_reference_pops_no_rs.bim`
 
 ## Citation
 
