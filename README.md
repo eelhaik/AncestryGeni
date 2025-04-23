@@ -6,7 +6,7 @@ AncestryGeni is a novel ancestry pipeline for small and noisy sequence data that
 
 The pipeline operates in two main stages:
 
-1. **First Stage (ADMIXTURE)**: Defines 12 global gene pools using unsupervised ADMIXTURE on reference individuals, followed by supervised ADMIXTURE to estimate ancestry proportions of test samples.
+1. **First Stage (ADMIXTURE)**: Defines global gene pools using unsupervised ADMIXTURE on reference individuals, followed by supervised ADMIXTURE to estimate ancestry proportions of test samples.
 2. **Second Stage (Machine Learning)**: Applies a supervised machine learning model to predict continental affiliations based on inferred ancestry proportions.
 
 ## Quick Start
