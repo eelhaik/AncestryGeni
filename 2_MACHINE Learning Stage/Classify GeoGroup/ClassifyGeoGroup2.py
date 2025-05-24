@@ -55,10 +55,10 @@ def train_model(X, y, sample_names, original_ids):
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
     cv_scores = cross_val_score(lda, X, y, cv=cv)
     
-    # Make predictions
-    y_pred = lda.predict(X_test)
+    # Make classifications
+    y_class = lda.predict(X_test)
     
-    return lda, X_test, y_test, y_pred, cv_scores, names_test, ids_test
+    return lda, X_test, y_test, y_class, cv_scores, names_test, ids_test
 
 def plot_confusion_matrix(cm, labels):
     """Plot the confusion matrix"""
@@ -68,14 +68,14 @@ def plot_confusion_matrix(cm, labels):
                 yticklabels=labels)
     plt.title('Confusion Matrix')
     plt.ylabel('True Label')
-    plt.xlabel('Predicted Label')
+    plt.xlabel('Classified Label')
     plt.tight_layout()
     plt.savefig('confusion_matrix.tif', dpi=600, format='tiff')
     plt.close()
 
-def plot_prediction_probabilities(lda, X_test, y_test, labels, sample_names, original_ids):
-    """Plot and analyze prediction probabilities"""
-    # Get prediction probabilities
+def plot_classification_probabilities(lda, X_test, y_test, labels, sample_names, original_ids):
+    """Plot and analyze classification probabilities"""
+    # Get classification probabilities
     probabilities = lda.predict_proba(X_test)
     
     # Create figure for probability matrix
@@ -86,8 +86,8 @@ def plot_prediction_probabilities(lda, X_test, y_test, labels, sample_names, ori
     annotations = np.empty((len(labels), len(labels)), dtype=object)
     
     for i, true_label in enumerate(labels):
-        for j, pred_label in enumerate(labels):
-            mask = (y_test == true_label) & (lda.predict(X_test) == pred_label)
+        for j, class_label in enumerate(labels):
+            mask = (y_test == true_label) & (lda.predict(X_test) == class_label)
             if np.any(mask):
                 # Get probabilities for these samples
                 sample_probs = probabilities[mask]
@@ -113,11 +113,11 @@ def plot_prediction_probabilities(lda, X_test, y_test, labels, sample_names, ori
     # Plot heatmap with annotations
     sns.heatmap(prob_matrix, annot=annotations, fmt='', cmap='Blues',
                 xticklabels=labels, yticklabels=labels)
-    plt.title('Prediction Probabilities\n(Top 1 and Top 2 Probabilities)')
-    plt.xlabel('Predicted Label')
+    plt.title('Classification Probabilities\n(Top 1 and Top 2 Probabilities)')
+    plt.xlabel('Classified Label')
     plt.ylabel('True Label')
     plt.tight_layout()
-    plt.savefig('prediction_probabilities.tif', dpi=600, format='tiff')
+    plt.savefig('classification_probabilities.tif', dpi=600, format='tiff')
     plt.close()
     
     # Print detailed probability information for each sample
@@ -140,32 +140,32 @@ def plot_prediction_probabilities(lda, X_test, y_test, labels, sample_names, ori
             'Sample_Name': sample_names[i],
             'Original_HGDP_IDs': original_ids[i],
             'True_Ancestry': y_test[i],
-            'Predicted_Ancestry': lda.predict(X_test)[i],
-            'Top1_Prediction': top1_label,
+            'Classified_Ancestry': lda.predict(X_test)[i],
+            'Top1_Classification': top1_label,
             'Top1_Probability': top1_prob,
-            'Top2_Prediction': top2_label,
+            'Top2_Classification': top2_label,
             'Top2_Probability': top2_prob
         })
         
         print(f"Sample {sample_names[i]}:")
         print(f"Original HGDP IDs: {original_ids[i]}")
         print(f"True Ancestry: {y_test[i]}")
-        print(f"Top 1 Prediction: {top1_label} (Probability: {top1_prob:.4f})")
-        print(f"Top 2 Prediction: {top2_label} (Probability: {top2_prob:.4f})")
+        print(f"Top 1 Classification: {top1_label} (Probability: {top1_prob:.4f})")
+        print(f"Top 2 Classification: {top2_label} (Probability: {top2_prob:.4f})")
         print("-" * 80)
     
     # Save sample information to Excel
-    pd.DataFrame(sample_info).to_excel('test_samples_predictions.xlsx', index=False)
-    print("\nTest samples predictions saved to 'test_samples_predictions.xlsx'")
+    pd.DataFrame(sample_info).to_excel('test_samples_classifications.xlsx', index=False)
+    print("\nTest samples classifications saved to 'test_samples_classifications.xlsx'")
 
-def print_detailed_predictions(names_test, ids_test, y_test, y_pred, limit=20):
-    """Print detailed predictions for the first n samples"""
-    print(f"\nDetailed Predictions (first {limit} samples):")
+def print_detailed_classifications(names_test, ids_test, y_test, y_class, limit=20):
+    """Print detailed classifications for the first n samples"""
+    print(f"\nDetailed Classifications (first {limit} samples):")
     print("=" * 50)
-    for name, orig_id, true, pred in zip(names_test[:limit], ids_test[:limit], y_test[:limit], y_pred[:limit]):
+    for name, orig_id, true, class_label in zip(names_test[:limit], ids_test[:limit], y_test[:limit], y_class[:limit]):
         print(f"Sample {name}:")
         print(f"Original HGDP IDs: {orig_id}")
-        print(f"True: {true:<30} Predicted: {pred}")
+        print(f"True: {true:<30} Classified: {class_label}")
         print("-" * 50)
 
 def main():
@@ -175,7 +175,7 @@ def main():
         return
         
     # Train model and get results
-    lda, X_test, y_test, y_pred, cv_scores, names_test, ids_test = train_model(
+    lda, X_test, y_test, y_class, cv_scores, names_test, ids_test = train_model(
         X, y, sample_names, original_ids
     )
     
@@ -187,18 +187,18 @@ def main():
     print(f"Mean CV accuracy: {cv_scores.mean():.2%} (+/- {cv_scores.std() * 2:.2%})")
     
     # Plot confusion matrix
-    cm = confusion_matrix(y_test, y_pred)
+    cm = confusion_matrix(y_test, y_class)
     plot_confusion_matrix(cm, np.unique(y))
     
-    # Plot and analyze prediction probabilities
-    plot_prediction_probabilities(lda, X_test, y_test, np.unique(y), names_test, ids_test)
+    # Plot and analyze classification probabilities
+    plot_classification_probabilities(lda, X_test, y_test, np.unique(y), names_test, ids_test)
     
     # Print classification report
     print("\nClassification Report:")
-    print(classification_report(y_test, y_pred))
+    print(classification_report(y_test, y_class))
     
-    # Print detailed predictions
-    print_detailed_predictions(names_test, ids_test, y_test, y_pred)
+    # Print detailed classifications
+    print_detailed_classifications(names_test, ids_test, y_test, y_class)
 
 if __name__ == "__main__":
     main() 

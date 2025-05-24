@@ -1,11 +1,11 @@
-# PredictGeoGroup ML Model Documentation
+# ClassifyGeoGroup ML Model Documentation
 
 ## Overview
-PredictGeoGroup is a machine learning tool for predicting geographic ancestry groups from genetic data. It uses two main scripts: `PredictGeoGroup1.py` for continental ancestry prediction and `PredictGeoGroup2.py` for 2-way continental prediction.
+ClassifyGeoGroup is a machine learning tool for classifying geographic ancestry groups from genetic data. It uses two main scripts: `ClassifyGeoGroup1.py` for continental ancestry classification and `ClassifyGeoGroup2.py` for 2-way continental classification.
 
 ## Repository Structure
 ```
-PredictGeoGroup/
+ClassifyGeoGroup/
 ├── AnalyzeVEPFile.py                 # VEP file analysis
 ├── comparing_models.ipynb            # Model comparison
 ├── config.json                       # Main config
@@ -14,8 +14,8 @@ PredictGeoGroup/
 ├── FilterPFile.py                    # P file filtering
 ├── module_model_executor.py          # ML model execution
 ├── module_preprocessor.py            # Data preprocessing
-├── PredictGeoGroup1.py               # Continental prediction
-├── PredictGeoGroup2.py               # 2-way continental prediction
+├── ClassifyGeoGroup1.py              # Continental classification
+├── ClassifyGeoGroup2.py              # 2-way continental classification
 ├── Toy_dataset/                      # Example data
 │   ├── mixed_samples.xlsx           # Sample data
 │   └── config/                      # Config files
@@ -26,14 +26,14 @@ PredictGeoGroup/
 
 ## Main Scripts
 
-### PredictGeoGroup1.py
+### ClassifyGeoGroup1.py
 - First step
 - Assigns continental ancestry groups
 - Generates confusion matrix
 
-### PredictGeoGroup2.py
+### ClassifyGeoGroup2.py
 - Second step
-- Performs 2-way continental prediction
+- Performs 2-way continental classification
 - Reports classification probabilities
 - Identifies borderline cases
 

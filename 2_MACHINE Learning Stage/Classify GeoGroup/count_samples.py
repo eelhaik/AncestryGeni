@@ -21,11 +21,11 @@ def analyze_directory(directory_path):
     
     # Count test samples
     test_files = [
-        "test_1KG_1k_with_predictions.csv",
-        "test_Germline_GATK_HaplotypeCaller_1k_with_predictions.csv",
-        "test_Germline_Strelka2_1k_with_predictions.csv",
-        "test_RNASeq_with_predictions.csv",
-        "test_Somatic_Verdict_1k_with_predictions.csv"
+        "test_1KG_1k_with_classifications.csv",
+        "test_Germline_GATK_HaplotypeCaller_1k_with_classifications.csv",
+        "test_Germline_Strelka2_1k_with_classifications.csv",
+        "test_RNASeq_with_classifications.csv",
+        "test_Somatic_Verdict_1k_with_classifications.csv"
     ]
     
     for test_file in test_files:
@@ -36,5 +36,5 @@ def analyze_directory(directory_path):
 
 if __name__ == "__main__":
     # Directory to analyze
-    directory = r"D:\AncestryGeni\PredictGeoGroup_ML_model\figD\figD_train_Germline_GATK_HaplotypeCaller_1k_lsqr"
+    directory = r"D:\AncestryGeni\ClassifyGeoGroup_ML_model\figD\figD_train_Germline_GATK_HaplotypeCaller_1k_lsqr"
     analyze_directory(directory) 

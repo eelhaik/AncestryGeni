@@ -142,7 +142,7 @@ def plot_roc_pr_for_regions(base_output_dir: str = "plots", dpi: int = 650) -> N
             y_train = le.fit_transform(train_data['Region'])
             y_test = le.transform(test_data['Region'])
             
-            # Train model and get predictions
+            # Train model and get classifications
             lda = train_lda_classifier(X_train, y_train)
             y_proba = lda.predict_proba(X_test)
             
@@ -203,14 +203,14 @@ def plot_roc_pr_for_regions(base_output_dir: str = "plots", dpi: int = 650) -> N
                 
                 # Save plots
                 output_path = roc_path if plot_type == 'roc' else pr_path
-                output_file = output_path / f"region_prediction_{plot_type}.png"
+                output_file = output_path / f"region_classification_{plot_type}.png"
                 plt.savefig(output_file, dpi=dpi, bbox_inches='tight',
                           bbox_extra_artists=(legend,))
                 plt.close(fig)
                 
                 # Save metrics
                 metrics_file = roc_metrics_file if plot_type == 'roc' else pr_metrics_file
-                save_metrics_for_test(metrics, "Region_Prediction", metrics_file, plot_type=plot_type)
+                save_metrics_for_test(metrics, "Region_Classification", metrics_file, plot_type=plot_type)
                 
                 logger.info(f"Saved {plot_type} plot and metrics")
                 

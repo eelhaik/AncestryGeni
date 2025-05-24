@@ -7,7 +7,7 @@ AncestryGeni is a novel ancestry pipeline for small and noisy sequence data that
 The pipeline operates in two main stages:
 
 1. **First Stage (ADMIXTURE)**: Defines global gene pools using unsupervised ADMIXTURE on reference individuals, followed by supervised ADMIXTURE to estimate ancestry proportions of test samples.
-2. **Second Stage (Machine Learning)**: Applies a supervised machine learning model to predict continental affiliations based on inferred ancestry proportions.
+2. **Second Stage (Machine Learning)**: Applies a supervised machine learning model to classify continental affiliations based on inferred ancestry proportions.
 
 ## Quick Start
 
@@ -46,11 +46,11 @@ AncestryGeni/
     │   ├── admix_3rd_Step_for_noise_analysis_and_plot.py
     │   ├── filtering_1st_Step_for_noise_analysis.py
     │   └── run_tests_with_filtered_samples_2nd_Step_for_noise_analysis.py
-    ├── Predict GeoGroup/
+    ├── Classify GeoGroup/
     │   ├── AnalyzeVEPFile.py
     │   ├── FilterPFile.py
-    │   ├── PredictGeoGroup1.py
-    │   ├── PredictGeoGroup2.py
+    │   ├── ClassifyGeoGroup1.py
+    │   ├── ClassifyGeoGroup2.py
     │   ├── README.md
     │   ├── config.json
     │   ├── count_samples.py
@@ -102,7 +102,7 @@ NUM_OF_LINES=1
 ```
 
 #### config.json
-Located in `2_MACHINE Learning Stage/Predict GeoGroup/`:
+Located in `2_MACHINE Learning Stage/Classify GeoGroup/`:
 ```json
 {
     "INPUT_TRAINING_FOLDER": "./training_data",
@@ -128,10 +128,10 @@ bash Run_AncestryGeni.txt
 
 ## Second Stage: Machine Learning Classification
 
-### 2.1 Basic Classification – PredictGeoGroup1.py
+### 2.1 Basic Classification – ClassifyGeoGroup1.py
 ```bash
-cd ../2_MACHINE Learning Stage/Predict GeoGroup
-python PredictGeoGroup1.py
+cd ../2_MACHINE Learning Stage/Classify GeoGroup
+python ClassifyGeoGroup1.py
 ```
 Performs initial ancestry classification using broad continental groups. This stage provides:
 - Quick and efficient initial assessment
@@ -139,11 +139,11 @@ Performs initial ancestry classification using broad continental groups. This st
 - Confusion matrix for performance evaluation
 - Direct ancestry assignments
 
-### 2.2 2-way Classification – PredictGeoGroup2.py
+### 2.2 2-way Classification – ClassifyGeoGroup2.py
 ```bash
-python PredictGeoGroup2.py
+python ClassifyGeoGroup2.py
 ```
-Performs 2-way prediction with:
+Performs 2-way classification with:
 - Probability scores for each ancestry
 - Alternative ancestry possibilities
 - Analysis of admixed populations
@@ -153,14 +153,14 @@ Performs 2-way prediction with:
 ### 2.3 Visualization Tools
 ```bash
 cd ../Tuning and Visualization
-python lda_performance_viz.py --input ../results/predictions.csv --output ./visualizations/
+python lda_performance_viz.py --input ../results/classifications.csv --output ./visualizations/
 ```
 Provides ROC and PR curve visualizations.
 
 ### 2.4 Usage Flow
 Recommended order of operations:
-1. Run `PredictGeoGroup1.py` for initial ancestry classification
-2. Run `PredictGeoGroup2.py` for deeper analysis
+1. Run `ClassifyGeoGroup1.py` for initial ancestry classification
+2. Run `ClassifyGeoGroup2.py` for deeper analysis
 3. Visualize results using `lda_performance_viz.py`
 
 ## Example Usage with Toy Dataset
@@ -172,7 +172,7 @@ The toy dataset is located in `2_MACHINE Learning Stage/Toy dataset for ML/`:
 
 ### Sample Data Format
 ```
-Sample_Name    Original_HGDP_IDs    True_Ancestry    Predicted_Ancestry    Top1_Prediction    Top1_Probability    Top2_Prediction    Top2_Probability
+Sample_Name    Original_HGDP_IDs    True_Ancestry    Classified_Ancestry    Top1_Classification    Top1_Probability    Top2_Classification    Top2_Probability
 HGDP00336      HGDP00336            Europe-Europe    Europe-Europe         Europe-Europe      0.554318            Africa-Europe      0.445644
 ```
 
@@ -180,8 +180,7 @@ Important Notes:
 1. All ancestry proportions must be decimal numbers between 0 and 1
 2. Values use commas as decimal separators (European format)
 3. The sum of ancestry components must equal 1.0
-4. Sample_Name and Final_HGDP are identifiers
-5. Ancestry_Label indicates the known ancestry group
+
 
 ## Output Files
 
@@ -191,7 +190,7 @@ Important Notes:
 - `*.log`: Convergence and runtime info
 
 ### Second Stage Outputs
-- `_with_predictions.csv`: Predicted ancestry
+- `_with_classifications.csv`: Classified ancestry
 - `output_basic.txt` / `output_detailed.txt`: Metrics
 - `best_model.pkl`: Saved model
 - Visualizations: Confusion matrix, heatmaps

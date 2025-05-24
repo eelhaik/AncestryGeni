@@ -162,12 +162,12 @@ def evaluate_classifier(model, X, y):
     accuracy = accuracy_score(y, y_pred)
     return accuracy
 
-def predict_code(df, best_model, X):
+def classify_code(df, best_model, X):
     """
-    Generate predictions and append to DataFrame.
+    Generate classifications and append to DataFrame.
     """    
-    predictions = best_model.predict(X)
-    df['predicted_region'] = predictions
+    classifications = best_model.predict(X)
+    df['classified_region'] = classifications
     return df
 
 def normalize_df(df, threshold, Training_dataset_df):
@@ -199,18 +199,18 @@ def calculate_accuracy(conf_matrix):
     """
     Calculate accuracy from confusion matrix.
     """    
-    correct_predictions = sum(conf_matrix[i][i] for i in range(len(conf_matrix)))
-    total_predictions = sum(sum(row) for row in conf_matrix)
-    return correct_predictions / total_predictions
+    correct_classifications = sum(conf_matrix[i][i] for i in range(len(conf_matrix)))
+    total_classifications = sum(sum(row) for row in conf_matrix)
+    return correct_classifications / total_classifications
 
-def print_confusion_matrix_basic(observed_codes, predicted_codes, output_file):
+def print_confusion_matrix_basic(observed_codes, classified_codes, output_file):
     """
     Print basic confusion matrix.
     """
     unique_codes = sorted(set(observed_codes))
-    conf_matrix = confusion_matrix(observed_codes, predicted_codes)
+    conf_matrix = confusion_matrix(observed_codes, classified_codes)
     
-    header = "Actual \\ Predicted".ljust(12) + "\t".join(str(code).center(8) for code in unique_codes)
+    header = "Actual \\ Classified".ljust(12) + "\t".join(str(code).center(8) for code in unique_codes)
     print(header)
     print("\t" + "-" * len(header))
     
@@ -229,7 +229,7 @@ def print_confusion_matrix_basic(observed_codes, predicted_codes, output_file):
 
     output_file.write(f"Accuracy: {accuracy:.2f}\n")
 
-def print_detailed_metrics(observed_codes, predicted_codes, model, X_test, y_test, output_file):
+def print_detailed_metrics(observed_codes, classified_codes, model, X_test, y_test, output_file):
     """
     Print detailed metrics and confusion matrix.
     """
@@ -239,10 +239,10 @@ def print_detailed_metrics(observed_codes, predicted_codes, model, X_test, y_tes
     output_file.write(section_separator)
     
     unique_codes = sorted(set(observed_codes))
-    conf_matrix = confusion_matrix(observed_codes, predicted_codes)
+    conf_matrix = confusion_matrix(observed_codes, classified_codes)
     
     output_file.write("CONFUSION MATRIX:\n")
-    matrix_header = "Actual \\ Predicted".ljust(12) + "\t".join(str(code).center(8) for code in unique_codes)
+    matrix_header = "Actual \\ Classified".ljust(12) + "\t".join(str(code).center(8) for code in unique_codes)
     output_file.write(matrix_header + "\n")
     output_file.write("-" * len(matrix_header) + "\n")
     
@@ -260,7 +260,7 @@ def print_detailed_metrics(observed_codes, predicted_codes, model, X_test, y_tes
     output_file.write(section_separator)
 
 def main():
-    print('Start program: PredictRegions')
+    print('Start program: ClassifyRegions')
     os.makedirs(MODELS_FOLDER, exist_ok=True)
     os.makedirs(RESULTS_FOLDER, exist_ok=True)
     
@@ -308,24 +308,24 @@ def main():
         X_test = test_data[TRAINING_COLUMNS]
         y_test = test_data[TARGET_COLUMN]
         
-        # Make predictions
-        df_pred = predict_code(test_data.copy(), best_model, X_test)
+        # Make classifications
+        df_class = classify_code(test_data.copy(), best_model, X_test)
         
-        # Save predictions
-        predictions_path = os.path.join(RESULTS_FOLDER, "predictions.xlsx")
-        df_pred.to_excel(predictions_path, index=False)
-        print(f"Saved predictions to {predictions_path}")
+        # Save classifications
+        classifications_path = os.path.join(RESULTS_FOLDER, "classifications.xlsx")
+        df_class.to_excel(classifications_path, index=False)
+        print(f"Saved classifications to {classifications_path}")
         
         # Generate evaluation metrics
         print_confusion_matrix_basic(
-            df_pred['Region'],
-            df_pred['predicted_region'],
+            df_class['Region'],
+            df_class['classified_region'],
             output_file_basic
         )
         
         print_detailed_metrics(
-            df_pred['Region'],
-            df_pred['predicted_region'],
+            df_class['Region'],
+            df_class['classified_region'],
             best_model,
             X_test,
             y_test,
@@ -342,7 +342,7 @@ def main():
                 metrics_df.to_excel(metrics_xlsx_path, index=False)
                 print(f"Saved performance metrics to {metrics_xlsx_path}")
 
-    print('\nEnd program: PredictRegions')
+    print('\nEnd program: ClassifyRegions')
 
 if __name__ == '__main__':
     main()

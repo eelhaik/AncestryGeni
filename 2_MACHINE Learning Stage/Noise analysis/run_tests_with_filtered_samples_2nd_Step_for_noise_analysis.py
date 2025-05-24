@@ -78,7 +78,7 @@ for noise_level in noise_levels:
    X_test = X_test.rename(columns=column_mapping)
    y_test = test_subset['Code']
    
-   # Predict
+   # Classify
    y_pred = model.predict(X_test)
    y_pred_proba = model.predict_proba(X_test)
    

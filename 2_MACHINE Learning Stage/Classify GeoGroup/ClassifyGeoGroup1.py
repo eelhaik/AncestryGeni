@@ -1,13 +1,13 @@
-#PredictGeoGroup
+#ClassifyGeoGroup
 # -*- coding: utf-8 -*-
 
 """
-PredictGeoGroup
+ClassifyGeoGroup
 
 Description:
-    PredictGeoGroup is a Python script designed for supervised machine learning (SML) prediction of GeoGroup based on genomic data. The script utilizes Linear Discriminant Analysis (LDA) to predict Sample Reference Registry (SRR) values from input genomic features. Ancestral components, collapsed into five regions (Africa, East Asia, Europe, Central Asia, and America), serve as input features for the SML model.
+    ClassifyGeoGroup is a Python script designed for supervised machine learning (SML) classification of GeoGroup based on genomic data. The script utilizes Linear Discriminant Analysis (LDA) to classify Sample Reference Registry (SRR) values from input genomic features. Ancestral components, collapsed into five regions (Africa, East Asia, Europe, Central Asia, and America), serve as input features for the SML model.
 
-This script reads a txt document with 5 GeoGroup classifiers and a code. It then trains an LDA classifier to predict the code. It will then be applied to other datasets.
+This script reads a txt document with 5 GeoGroup classifiers and a code. It then trains an LDA classifier to classify the code. It will then be applied to other datasets.
  
 Input:
     Training and testing data files containing genomic features and corresponding SRR values. These files should be tabular 
@@ -15,7 +15,7 @@ Input:
     to be provided as arguments during execution.
 
 Output:
-    The script generates output files containing predicted SRR values and performance metrics of the trained model. These output files provide insights into the accuracy and reliability of the model predictions. Additionally, the script may produce visualization plots to aid in result interpretation.
+    The script generates output files containing classified SRR values and performance metrics of the trained model. These output files provide insights into the accuracy and reliability of the model. Additionally, the script may produce visualization plots to aid in result interpretation.
 
 Dependencies:
     - Python 3.x
@@ -24,7 +24,7 @@ Dependencies:
     - scikit-learn
 
 Usage:
-    python PredictGeoGroup.py <training_data_file> <testing_data_file>
+    python ClassifyGeoGroup.py <training_data_file> <testing_data_file>
 
 Methodology:
     1. Data Preprocessing: Ancestral components are collapsed into five regions for simplicity. Data splitting is performed 
@@ -33,9 +33,8 @@ Methodology:
        including the maximum number of trees, are specified based on the requirements.
     3. Cross-Validation: The trained model is evaluated through 10-fold cross-validation to assess its performance and 
        generalization capabilities.
-    4. Performance Evaluation: Performance metrics, such as accuracy and error rates, are computed to quantify the model's 
-       predictive performance.
-    5. Result Interpretation: Predicted SRR values and performance metrics are generated as output, facilitating result 
+    4. Performance Evaluation: Performance metrics, such as accuracy and error rates, are computed to quantify the model's performance.
+    5. Result Interpretation: classified SRR values and performance metrics are generated as output, facilitating result 
        interpretation and model refinement.
 
 Based on: GPSEra_3
@@ -123,9 +122,9 @@ def initialize_ML_models():
 
     }
 
-def TrainPredictor(data_file, folder_suffix):
+def TrainClassifier(data_file, folder_suffix):
     """
-    Train predictor models using the provided data file and save the trained models as .pkl files.
+    Train classifier models using the provided data file and save the trained models as .pkl files.
     Also, save performance metrics to an Excel file.
 
     Parameters:
@@ -234,7 +233,7 @@ def evaluate_model(model: LinearDiscriminantAnalysis, X_test: pd.DataFrame, y_te
     """    
     try:
         start_time = time.time()
-        y_pred = model.predict(X_test)
+        y_class = model.predict(X_test)
         
         # Calculate probabilities for AUC if available
         try:
@@ -248,13 +247,13 @@ def evaluate_model(model: LinearDiscriminantAnalysis, X_test: pd.DataFrame, y_te
 
         # Calculate multiple classification metrics
         metrics = {
-            'Accuracy': accuracy_score(y_test, y_pred),
+            'Accuracy': accuracy_score(y_test, y_class),
             'AUC': auc,
-            'Recall': recall_score(y_test, y_pred, average='weighted'),
-            'Precision': precision_score(y_test, y_pred, average='weighted'),
-            'F1': f1_score(y_test, y_pred, average='weighted'),
-            'Kappa': cohen_kappa_score(y_test, y_pred),
-            'MCC': matthews_corrcoef(y_test, y_pred),
+            'Recall': recall_score(y_test, y_class, average='weighted'),
+            'Precision': precision_score(y_test, y_class, average='weighted'),
+            'F1': f1_score(y_test, y_class, average='weighted'),
+            'Kappa': cohen_kappa_score(y_test, y_class),
+            'MCC': matthews_corrcoef(y_test, y_class),
             'Training_Time': round(time.time() - start_time, 4)
         }
         
@@ -350,34 +349,34 @@ def evaluate_classifier(model, X, y):
 
     Parameters:
     - model: The trained classifier model.
-    - X (array-like): The input features for prediction.
+    - X (array-like): The input features for classification.
     - y (array-like): The true labels.
 
     Returns:
     - accuracy (float): Accuracy score of the classifier model.
     """    
-    y_pred = model.predict(X)
-    accuracy = accuracy_score(y, y_pred)
+    y_class = model.predict(X)
+    accuracy = accuracy_score(y, y_class)
     return accuracy
 
 
-def predict_code(df, best_model, X):
+def classify_code(df, best_model, X):
     """
-    Generate predictions using the best model and append the predicted codes to the DataFrame.
+    Generate classifications using the best model and append the classified codes to the DataFrame.
 
     Parameters:
     - df (DataFrame): The DataFrame containing the dataset.
-    - best_model: The trained model used for making predictions.
-    - X (array-like): The input features for prediction.
+    - best_model: The trained model used for making classifications.
+    - X (array-like): The input features for classification.
 
     Returns:
-    - df (DataFrame): The DataFrame with the predicted codes appended as a new column.
+    - df (DataFrame): The DataFrame with the classified codes appended as a new column.
     """    
-    # Generate predictions for the entire dataset
-    #print('Generate predictions')
-    predictions = best_model.predict(X)  # Assuming predictions are categorical labels
-    df['predicted_code'] = predictions
-    #print('Predictions completed')
+    # Generate classifications for the entire dataset
+    #print('Generate classifications')
+    classifications = best_model.predict(X)  # Assuming classifications are categorical labels
+    df['classified_code'] = classifications
+    #print('Classifications completed')
 
     return df
 
@@ -437,24 +436,24 @@ def calculate_accuracy(conf_matrix):
 
     Parameters:
     - conf_matrix (list of lists): Confusion matrix representing the classification results.
-                                   Rows correspond to actual classes, columns correspond to predicted classes.
+                                   Rows correspond to actual classes, columns correspond to classified classes.
 
     Returns:
-    - accuracy (float): Accuracy of the classification model, defined as the ratio of correct predictions to total predictions.
+    - accuracy (float): Accuracy of the classification model, defined as the ratio of correct classifications to total classifications.
     """    
-    correct_predictions = sum(conf_matrix[i][i] for i in range(len(conf_matrix)))
-    total_predictions = sum(sum(row) for row in conf_matrix)
-    accuracy = correct_predictions / total_predictions
+    correct_classifications = sum(conf_matrix[i][i] for i in range(len(conf_matrix)))
+    total_classifications = sum(sum(row) for row in conf_matrix)
+    accuracy = correct_classifications / total_classifications
     return accuracy
 
 
-def print_confusion_matrix_basic(observed_codes, predicted_codes, output_file):
+def print_confusion_matrix_basic(observed_codes, classified_codes, output_file):
     """
-    Prints the confusion matrix based on the actual and predicted codes.
+    Prints the confusion matrix based on the actual and classified codes.
 
     Parameters:
         observed_codes (list): List of actual codes.
-        predicted_codes (list): List of predicted codes.
+        classified_codes (list): List of classified codes.
 
     Returns:
         None
@@ -463,10 +462,10 @@ def print_confusion_matrix_basic(observed_codes, predicted_codes, output_file):
     unique_codes = sorted(set(observed_codes))
     
     # Calculate confusion matrix
-    conf_matrix = confusion_matrix(observed_codes, predicted_codes)
+    conf_matrix = confusion_matrix(observed_codes, classified_codes)
     
     # Print headers
-    header = "Actual \\ Predicted".ljust(12) + "\t".join(str(code).center(8) for code in unique_codes)
+    header = "Actual \\ Classified".ljust(12) + "\t".join(str(code).center(8) for code in unique_codes)
     print(header)
     print("\t" + "-" * len(header))
     
@@ -494,7 +493,7 @@ def print_confusion_matrix_basic(observed_codes, predicted_codes, output_file):
     output_file.write(f"Accuracy: {accuracy:.2f}\n")
 
 
-def print_detailed_metrics(observed_codes, predicted_codes, model, X_test, y_test, output_file):
+def print_detailed_metrics(observed_codes, classified_codes, model, X_test, y_test, output_file):
     """
     Prints detailed metrics including confusion matrix and all evaluation metrics.
     """
@@ -507,12 +506,12 @@ def print_detailed_metrics(observed_codes, predicted_codes, model, X_test, y_tes
     
     # Print confusion matrix with labels
     unique_codes = sorted(set(observed_codes))
-    conf_matrix = confusion_matrix(observed_codes, predicted_codes)
+    conf_matrix = confusion_matrix(observed_codes, classified_codes)
     
     output_file.write("CONFUSION MATRIX:\n")
     
     # Matrix header
-    matrix_header = "Actual \\ Predicted".ljust(12) + "\t".join(str(code).center(8) for code in unique_codes)
+    matrix_header = "Actual \\ classified".ljust(12) + "\t".join(str(code).center(8) for code in unique_codes)
     output_file.write(matrix_header + "\n")
     output_file.write("-" * len(matrix_header) + "\n")
     
@@ -532,7 +531,7 @@ def print_detailed_metrics(observed_codes, predicted_codes, model, X_test, y_tes
     output_file.write(section_separator)
   
 def main():
-    print('Start program: PredictRace')
+    print('Start program: ClassifyRace')
     os.makedirs(MODELS_FOLDER, exist_ok=True)
     os.makedirs(RESULTS_FOLDER, exist_ok=True)
     
@@ -642,28 +641,28 @@ def main():
                 print(f"Warning: No samples remaining in {INPUT_TESTING_FILE_curr} after filtering")
                 continue
 
-            # Prepare test data for prediction
+            # Prepare test data for classification
             X_pred, Y_pred = prepare_lda_data(Testing_dataset_df)
             
-            # Make predictions
-            df_code_pred = predict_code(Testing_dataset_df.copy(), best_model, X_pred)
+            # Make classifications
+            df_code_pred = classify_code(Testing_dataset_df.copy(), best_model, X_pred)
 
-            # Save test data with predictions
+            # Save test data with classifications
             test_file_name = os.path.splitext(test_file)[0]
-            test_output_path = os.path.join(RESULTS_FOLDER, f"test_{test_file_name}_with_predictions.csv")
+            test_output_path = os.path.join(RESULTS_FOLDER, f"test_{test_file_name}_with_classifications.csv")
             df_code_pred.to_csv(test_output_path, sep='\t', index=False)
-            print(f"Saved test file with predictions to {test_output_path}")
+            print(f"Saved test file with classification results to {test_output_path}")
             
             # Generate evaluation metrics
             print_confusion_matrix_basic(
                 df_code_pred['Code'],
-                df_code_pred['predicted_code'],
+                df_code_pred['classified_code'],
                 output_file_basic
             )
             
             print_detailed_metrics(
                 df_code_pred['Code'],
-                df_code_pred['predicted_code'],
+                df_code_pred['classified_code'],
                 best_model,
                 X_pred,
                 Y_pred,
@@ -671,7 +670,7 @@ def main():
             )
 
     # Save final results
-    print('\nEnd program: PredictRace')
+    print('\nEnd program: classifyRace')
 
 if __name__ == '__main__':
     main()
