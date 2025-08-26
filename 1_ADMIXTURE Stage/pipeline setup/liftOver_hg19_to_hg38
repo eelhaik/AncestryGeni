@@ -1,0 +1,20 @@
+#!/bin/bash
+# wget http://hgdownload-test.cse.ucsc.edu/goldenPath/hg20/liftOver/hg19ToHg38.over.chain.gz
+# command :
+# sh liftOver_hg19_to_hg38  /path/to/bim
+# ./liftOver_hg19_to_hg38 Output_1.bim
+ 
+subject_bim="$1"
+
+cat $subject_bim | awk '{print "chr"$1"\t"$4-1"\t"$4"\t"$2}' |  \
+   awk '{ gsub(/chrchr/, "chr"); print }'  > $subject_bim.1.bed
+
+./liftOver $subject_bim.1.bed hg19ToHg38.over.chain.gz  \
+    $subject_bim.lifted.1.bed $subject_bim.1.unlifted.bed.2
+
+cat $subject_bim.1.unlifted.bed.2 | grep -v "^#" |   \
+   awk '{print $4}' > $subject_bim.unlifted.bed
+cat $subject_bim.lifted.1.bed | cut -f 1,3,4 | awk '{ gsub(/chr/, ""); print }' |  \
+   awk '{ print $3"\t"$1"\t"$2}' > $subject_bim.lifted.bed
+
+rm -f $subject_bim.1.unlifted.bed.2 $subject_bim.1.bed $subject_bim.lifted.1.bed
